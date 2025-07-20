@@ -87,13 +87,13 @@ if selected == "🏠 Home":
 
 
 elif selected == "📊 Product Analysis":
-    exec(open("shdashboard/Product_Analysis.py").read())
+    exec(open("shdashboard/Product_Analysis.py", encoding="utf-8").read())
 
 elif selected == "💸 Premium Prediction":
-    exec(open("shdashboard/Premium_Prediction.py").read())
+    exec(open("shdashboard/Premium_Prediction.py", encoding="utf-8").read())
 
 elif selected == "📚 RAG Q&A":
-    exec(open("shdashboard/Brochure_QA.py").read())
+    exec(open("shdashboard/Brochure_QA.py", encoding="utf-8").read())
 
 elif selected == "🕵 Fraud Detection":
-    exec(open("shdashboard/Fraud_Detection.py").read())
+    exec(open("shdashboard/Fraud_Detection.py", encoding="utf-8").read())
