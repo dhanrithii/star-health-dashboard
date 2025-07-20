@@ -100,8 +100,8 @@ def generate_claim_document(row):
 claim_df['claim_document'] = claim_df.apply(generate_claim_document, axis=1)
 
 # Load CSVs and images
-claims_df = pd.read_csv("/content/dashboard/data/claim_anomalies.csv")
-provider_df = pd.read_csv("/content/dashboard/data/provider_risk_scores.csv")
+claims_df = pd.read_csv("/content/dashboard/data/claim_anomalies.csv", encoding='utf-8')
+provider_df = pd.read_csv("/content/dashboard/data/provider_risk_scores.csv", encoding='utf-8')
 
 def get_base64_image(path):
     with open(path, "rb") as f:
