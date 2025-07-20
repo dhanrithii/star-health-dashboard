@@ -98,7 +98,6 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 **Dhanrithii D.**
 Data Science Intern @ Star Health Insurance
-Supervised by: Dr. Suresh Kumar M. (Sri Venkateswara College of Engineering)
 
 ---
 
