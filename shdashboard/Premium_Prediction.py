@@ -10,7 +10,7 @@ from streamlit_option_menu import option_menu
 # Load data and encoders
 @st.cache_data
 def load_data():
-    df = pd.read_csv('/content/dashboard/data/Assure_PremiumChart.csv')
+    df = pd.read_csv('/content/dashboard/data/Assure_PremiumChart.csv', encoding='utf-8')
     model = joblib.load('/content/dashboard/data/xgb_model.pkl')
     le_zone = joblib.load('/content/dashboard/data/zone_encoder.pkl')
     le_plan = joblib.load('/content/dashboard/data/plan_encoder.pkl')
