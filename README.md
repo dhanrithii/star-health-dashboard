@@ -111,9 +111,6 @@ Data Science Intern @ Star Health Insurance
 ---
 
 ```
-
----
-
 Let me know if you want to:
 - Customize license (e.g., Apache-2.0, GPLv3, etc.)
 - Add contributor guidelines
