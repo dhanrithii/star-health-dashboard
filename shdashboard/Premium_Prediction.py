@@ -93,6 +93,11 @@ def load_explainer(model):
 model = load_model()
 explainer = load_explainer(model)
 
+@st.cache_data
+def get_sample_shap(explainer, sample_df):
+    X = sample_df[features]
+    return explainer.shap_values(X)
+
 # Sidebar navigation
 with st.sidebar:
     selected = option_menu(
@@ -178,7 +183,7 @@ elif selected == "📊 Visuals":
 
     # SHAP Explanation
     X_sample = sample_df[features]
-    shap_values = explainer.shap_values(X_sample)
+    shap_values = get_sample_shap(explainer, sample_df)
 
     # Clear plot before rendering
     plt.clf()
