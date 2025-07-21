@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 import shap
+from shap import Explanation
 import matplotlib.pyplot as plt
 import seaborn as sns
 from streamlit_option_menu import option_menu
@@ -15,12 +16,27 @@ os.environ["TRANSFORMERS_NO_TF"] = "1"
 @st.cache_data
 def load_data():
     df = pd.read_csv('data/Assure_PremiumChart.csv', encoding='utf-8')
-    model = joblib.load('data/xgb_model.pkl')
     le_zone = joblib.load('data/zone_encoder.pkl')
     le_plan = joblib.load('data/plan_encoder.pkl')
     return df, model, le_zone, le_plan
 
-data, model, le_zone, le_plan = load_data()
+@st.cache_resource
+def load_model():
+    return joblib.load("data/xgb_model.pkl")
+
+@st.cache_resource
+def load_explainer(_model):
+    explainer = shap.Explainer(_model)
+    return explainer
+
+@st.cache_data
+def get_sample_shap(_explainer, sample_df):
+    X = sample_df[features]
+    return _explainer.shap_values(X)
+    
+data, le_zone, le_plan = load_data()
+model = load_model()
+explainer = load_explainer(model)
 
 features = ['Zone Encoded', 'Term', 'Plan Type Encoded', 'Sum Insured', 'Age Lower', 'Age Upper']
 best_mae = 12732.13
@@ -82,22 +98,6 @@ def prepare_new_sample(sample_df, le_zone, le_plan):
 
 known_bands = build_age_band_lookup(data)
 
-@st.cache_resource
-def load_model():
-    return joblib.load("data/xgb_model.pkl")
-
-@st.cache_resource
-def load_explainer(model):
-    return shap.TreeExplainer(model)
-
-model = load_model()
-explainer = load_explainer(model)
-
-@st.cache_data
-def get_sample_shap(explainer, sample_df):
-    X = sample_df[features]
-    return explainer.shap_values(X)
-
 # Sidebar navigation
 with st.sidebar:
     selected = option_menu(
@@ -133,7 +133,7 @@ if selected == "🏠 Home":
     st.subheader("📝 Module Overview")
     st.markdown("""
     - Trained on pre-defined **age bands** from insurer brochures
-    - Handles zone, plan, and sum insured as categorical/numeric inputs
+    - Handles zone, plan, and sum insured as categorical/numeric s
     - Uses **SHAP** to explain each prediction's drivers
     - Run live inside this internship dashboard
     """)
@@ -198,7 +198,7 @@ elif selected == "📊 Visuals":
 
 elif selected == "💡 Predict Premium":
     st.title("💡 Predict Your Premium Instantly")
-    st.markdown("""Fill in the inputs below to estimate your premium.
+    st.markdown("""Fill in the s below to estimate your premium.
     The system uses your age to map to the closest **brochure-based age band**.
     """)
     col1, col2 = st.columns(2)
@@ -228,28 +228,31 @@ elif selected == "💡 Predict Premium":
             st.success(f"💰 **Predicted Premium:** ₹{prediction:,.2f}")
 
             # 🔍 SHAP Explanation
+            # 🔍 SHAP Explanation
             st.subheader("📌 SHAP Explanation")
-
+            
             shap_values = explainer.shap_values(input_df)
-            base_value = shap_values.base_values[0]
-            predicted_value = shap_values[0].values.sum() + base_value
-
+            base_value = explainer.expected_value
+            predicted_value = shap_values[0].sum() + base_value
+            
             st.markdown(f"""
             <b>🧠 Base Premium (Expected Value):</b> ₹{base_value:,.0f}<br>
             <b>📈 Final Predicted Premium (after feature effects):</b> ₹{predicted_value:,.0f}
             """, unsafe_allow_html=True)
-
-            fig, ax = plt.subplots()
-            shap.plots.waterfall(shap.Explanation(values=shap_values[0], base_values=explainer.expected_value, data=input_df.iloc[0]), show=False)
             
-            # Remove stray labels like "= xxx"
-            for txt in fig.axes[0].texts:
-                if "=" in txt.get_text():
-                    txt.set_visible(False)
+            # Proper SHAP Explanation object
+            explanation = shap.Explanation(
+                values=shap_values[0],
+                base_values=base_value,
+                data=input_df.iloc[0],
+                feature_names=input_df.columns.tolist()
+            )
             
-            plt.tight_layout()
+            fig, ax = plt.subplots(figsize=(10, 5))
+            shap.plots.waterfall(explanation, show=False)
             st.pyplot(fig)
-            plt.clf()  # Important cleanup
+            plt.clf()
+            
             st.caption("🔎 The SHAP plot shows how each input feature nudges the premium away from the average.")
 
         else:
