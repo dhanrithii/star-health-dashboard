@@ -50,7 +50,7 @@ def chunk_text(text, max_words=100):
     return [" ".join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
 
 # --- GenAI Setup ---
-if GEMINIKEY :
+if api_key:
     genai.configure(api_key=GEMINIKEY)
     gen_model = genai.GenerativeModel("models/gemini-1.5-flash")
 else:
