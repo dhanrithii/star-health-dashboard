@@ -168,7 +168,7 @@ elif selected == "📊 Visuals":
 
     # SHAP Explanation
     X_split = sample_df[features]
-    explainer = shap.Explainer(model)
+    explainer = shap.TreeExplainer(model)
     shap_values = explainer(X_split)
 
     shap.summary_plot(shap_values, X_split, feature_names=features, show=False)
@@ -210,7 +210,7 @@ elif selected == "💡 Predict Premium":
             # 🔍 SHAP Explanation
             st.subheader("📌 SHAP Explanation")
 
-            shap_values = shap.Explainer(model)(input_df)
+            shap_values = shap.TreeExplainer(model)(input_df)
             base_value = shap_values.base_values[0]
             predicted_value = shap_values[0].values.sum() + base_value
 
