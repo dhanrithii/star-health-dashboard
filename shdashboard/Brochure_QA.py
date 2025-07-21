@@ -11,7 +11,6 @@ import google.generativeai as genai
 from streamlit_option_menu import option_menu
 
 os.environ["TRANSFORMERS_NO_TF"] = "1"
-st.write("Available keys:", st.secrets.keys())
 
 # --- Sidebar Navigation ---
 with st.sidebar:
