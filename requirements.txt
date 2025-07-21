@@ -32,3 +32,4 @@ matplotlib.pyplot
 PIL
 zipfile
 base64
+TFPreTrainedModel
