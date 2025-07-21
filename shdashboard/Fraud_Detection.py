@@ -20,13 +20,13 @@ with st.sidebar:
         default_index=0
     )
 
-zip_path = '/content/dashboard/data/fhir.zip'
-extract_path = '/content/dashboard/data/fhir_data'
+zip_path = 'data/fhir.zip'
+extract_path = 'data/fhir_data'
 
 # Unzip
 with zipfile.ZipFile(zip_path, 'r') as zip_ref:
     zip_ref.extractall(extract_path)
-fhir_dir = '/content/dashboard/data/fhir_data/fhir'
+fhir_dir = 'data/fhir_data/fhir'
 all_fhir_resources = []
 for filename in os.listdir(fhir_dir):
     if filename.endswith(".json"):
@@ -100,8 +100,8 @@ def generate_claim_document(row):
 claim_df['claim_document'] = claim_df.apply(generate_claim_document, axis=1)
 
 # Load CSVs and images
-claims_df = pd.read_csv("/content/dashboard/data/claim_anomalies.csv", encoding='utf-8')
-provider_df = pd.read_csv("/content/dashboard/data/provider_risk_scores.csv", encoding='utf-8')
+claims_df = pd.read_csv("data/claim_anomalies.csv", encoding='utf-8')
+provider_df = pd.read_csv("data/provider_risk_scores.csv", encoding='utf-8')
 
 def get_base64_image(path):
     with open(path, "rb") as f:
@@ -111,12 +111,12 @@ def get_base64_image(path):
 def display_image_centered(path, caption="", width=600):
     img_base64 = get_base64_image(path)
     st.markdown(
-        f"""
+        f'''
         <div style='text-align: center;'>
             <img src="data:image/png;base64,{img_base64}" width="{width}">
             <p><i>{caption}</i></p>
         </div>
-        """,
+        ''',
         unsafe_allow_html=True
     )
 
@@ -137,7 +137,7 @@ if selected == "🗂 Overview":
     Our proposed ClaimNet framework exhibits superior performance across most axes,
     highlighting its balanced design and adaptability.
     """)
-    display_image_centered("/content/dashboard/data/compare.png", width=750)
+    display_image_centered("data/compare.png", width=750)
 
     st.subheader("🧠 End-to-End System Architecture")
     st.markdown("""
@@ -149,7 +149,7 @@ if selected == "🗂 Overview":
 
     Each step is designed to preserve interpretability while ensuring scalable, real-time fraud detection.
     """)
-    display_image_centered("/content/dashboard/data/architecture.png", width=750)
+    display_image_centered("data/architecture.png", width=750)
 
 
 elif selected == "📎 FHIR Insights":
@@ -199,12 +199,12 @@ elif selected == "📎 FHIR Insights":
     st.write("**Nodes:** 521   **Edges:** 954")
 
     # --- Graph Visualizations ---
-    display_image_centered("/content/dashboard/data/full graph.png", "📌 Full Heterogeneous Graph", width=1000)
+    display_image_centered("data/full graph.png", "📌 Full Heterogeneous Graph", width=1000)
     st.markdown("""
     The full graph shows all claims, patients, and providers interconnected based on FHIR-derived relationships. Colors represent different node types.
     """)
 
-    display_image_centered("/content/dashboard/data/subgraph.png", "🔍 Subgraph of Suspicious Claims", width=1000)
+    display_image_centered("data/subgraph.png", "🔍 Subgraph of Suspicious Claims", width=1000)
     st.markdown("""
     This subgraph zooms into anomalous clusters identified by Isolation Forest and Local Outlier Factor, highlighting potential fraudulent behavior.
     """)
@@ -245,7 +245,7 @@ elif selected == "📊 Claim Anomalies":
 
     Each dot in the plot represents a node (claim, patient, or provider). Outliers often appear far from dense clusters.
     """)
-    display_image_centered("/content/dashboard/data/umap.png", "📉 Low-Dimensional Projection of Node Embeddings", width=700)
+    display_image_centered("data/umap.png", "📉 Low-Dimensional Projection of Node Embeddings", width=700)
 
 
 elif selected == "📈 Provider Risk":
