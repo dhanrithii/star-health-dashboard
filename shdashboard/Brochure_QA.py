@@ -23,8 +23,8 @@ with st.sidebar:
 
 # --- Constants ---
 EMBED_MODEL_NAME = 'sentence-transformers/all-MiniLM-L6-v2'
-api_key = st.secrets["api"]["GEMINIKEY"]
-genai.configure(api_key=api_key)
+GEMINIKEY = st.secrets["api"]["GEMINIKEY"]
+genai.configure(api_key=GEMINIKEY)
 
 tokenizer = AutoTokenizer.from_pretrained(EMBED_MODEL_NAME)
 model = AutoModel.from_pretrained(EMBED_MODEL_NAME)
@@ -50,9 +50,9 @@ def chunk_text(text, max_words=100):
     return [" ".join(words[i:i+max_words]) for i in range(0, len(words), max_words)]
 
 # --- GenAI Setup ---
-if api_key:
-    genai.configure(api_key=api_key)
-    gen_model = genai.GenerativeModel("models/gemini-1.5-flash")
+if GEMINIKEY:
+    genai.configure(api_key=GEMINIKEY)
+    gen_model = genai.GenerativeModel("models/gemini-pro")
 else:
     gen_model = None
 
