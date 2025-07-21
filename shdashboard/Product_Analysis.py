@@ -22,7 +22,7 @@ with st.sidebar:
 # --- Load data ---
 @st.cache_data
 def load_data():
-    conn = sqlite3.connect("/data/health_insurance.db")
+    conn = sqlite3.connect("data/health_insurance.db")
     df_products = pd.read_sql_query("SELECT * FROM Products", conn)
     df_coverage = pd.read_sql_query("SELECT * FROM coverage", conn)
     conn.close()
