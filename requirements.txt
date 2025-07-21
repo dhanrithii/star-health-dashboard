@@ -18,17 +18,5 @@ dgl
 plotly
 umap-learn
 adjustText
-sqlite3
-json
-sklearn
 torch
 transformers
-sklearn-metrics-pairwise
-sklearn-model-selection 
-sklearn-ensemble 
-sklearn-preprocessing 
-matplotlib.pyplot
-PIL
-zipfile
-base64
-
