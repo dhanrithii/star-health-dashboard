@@ -84,7 +84,7 @@ known_bands = build_age_band_lookup(data)
 
 @st.cache_resource
 def load_model():
-    return joblib.load("dat/xgb_model.pkl")
+    return joblib.load("data/xgb_model.pkl")
 
 @st.cache_resource
 def load_explainer(model):
