@@ -18,7 +18,7 @@ def load_data():
     df = pd.read_csv('data/Assure_PremiumChart.csv', encoding='utf-8')
     le_zone = joblib.load('data/zone_encoder.pkl')
     le_plan = joblib.load('data/plan_encoder.pkl')
-    return df, model, le_zone, le_plan
+    return df, le_zone, le_plan
 
 @st.cache_resource
 def load_model():
