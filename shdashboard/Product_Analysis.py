@@ -10,8 +10,6 @@ from adjustText import adjust_text
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 
-st.set_page_config(page_title="Product Analysis", layout="wide")
-
 # --- Local navigation using sidebar ---
 with st.sidebar:
     section = option_menu(
