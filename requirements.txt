@@ -18,7 +18,6 @@ dgl
 plotly
 umap-learn
 adjustText
-os
 sqlite3
 json
 sklearn
