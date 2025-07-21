@@ -21,7 +21,8 @@ with st.sidebar:
 
 # --- Constants ---
 EMBED_MODEL_NAME = 'sentence-transformers/all-MiniLM-L6-v2'
-GENAI_API_KEY = "AIzaSyCqRyeqSFkkqO2Z8s3wUXNRy8vYK-ozCh0"
+api_key = st.secrets["GENAI_API_KEY"]
+genai.configure(api_key=api_key)
 
 tokenizer = AutoTokenizer.from_pretrained(EMBED_MODEL_NAME)
 model = AutoModel.from_pretrained(EMBED_MODEL_NAME)
