@@ -188,7 +188,7 @@ elif selected == "📊 Visuals":
     # Clear plot before rendering
     plt.clf()
     
-    shap.summary_plot(shap_values, X_sample, plot_type="bar", show=False)
+    shap.summary_plot(shap_values, X_sample, plot_type="bar", feature_names=features, show=False)
     fig2 = plt.gcf()
     st.pyplot(fig2)
     
