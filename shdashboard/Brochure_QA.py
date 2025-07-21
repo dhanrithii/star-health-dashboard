@@ -10,6 +10,8 @@ import torch
 import google.generativeai as genai
 from streamlit_option_menu import option_menu
 
+os.environ["TRANSFORMERS_NO_TF"] = "1"
+
 # --- Sidebar Navigation ---
 with st.sidebar:
     selected = option_menu(
