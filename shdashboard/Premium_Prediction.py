@@ -82,6 +82,17 @@ def prepare_new_sample(sample_df, le_zone, le_plan):
 
 known_bands = build_age_band_lookup(data)
 
+@st.cache_resource
+def load_model():
+    return joblib.load("models/xgb_model.pkl")
+
+@st.cache_resource
+def load_explainer(model):
+    return shap.TreeExplainer(model)
+
+model = load_model()
+explainer = load_explainer(model)
+
 # Sidebar navigation
 with st.sidebar:
     selected = option_menu(
@@ -122,34 +133,33 @@ if selected == "🏠 Home":
     - Run live inside this internship dashboard
     """)
 
+
 elif selected == "📊 Visuals":
     st.title("📊 Feature Insights and SHAP Analysis")
 
     st.subheader("📌 XGBoost Feature Importance")
     st.markdown("This bar chart shows which features contribute most to premium prediction.")
+
     # --- Feature Importance Bar Plot ---
     importances = model.feature_importances_
     importance_df = pd.DataFrame({'Feature': features, 'Importance': importances}).sort_values(by='Importance')
-    fig, ax = plt.subplots(figsize=(8,5))
+    fig1, ax = plt.subplots(figsize=(8,5))
     sns.barplot(x='Importance', y='Feature', data=importance_df, palette='Blues_d', ax=ax)
     ax.set_title("XGBoost Feature Importances")
-    st.pyplot(fig)
+    st.pyplot(fig1)
 
     st.markdown("---")
     st.subheader("🔍 SHAP Summary Plot")
     st.markdown("This SHAP plot shows how each feature influences predictions across 500 samples.")
-    shap.initjs()
 
-    # Sample and clean
+    # Sample and preprocess
     sample_df = data.sample(n=500, random_state=42).copy()
 
-    # Encode features
     sample_df['Zone Encoded'] = le_zone.transform(sample_df['Zone'])
     sample_df['Plan Type Encoded'] = le_plan.transform(sample_df['Plan Type'])
     sample_df['Term'] = sample_df['Term'].astype(str).str.extract(r'(\d+)').astype(int)
     sample_df['Sum Insured'] = sample_df['Sum Insured'].astype(int)
 
-    # Split Age Band into Age Lower and Age Upper
     def split_age_band(band):
         band = band.lower().replace('yrs', '').replace('year', '')
         if 'above' in band:
@@ -167,13 +177,18 @@ elif selected == "📊 Visuals":
     sample_df[['Age Lower', 'Age Upper']] = sample_df['Age Band'].apply(lambda x: pd.Series(split_age_band(x)))
 
     # SHAP Explanation
-    X_split = sample_df[features]
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer(X_split)
+    X_sample = sample_df[features]
+    shap_values = explainer.shap_values(X_sample)
 
-    shap.summary_plot(shap_values, X_split, feature_names=features, show=False)
+    # Clear plot before rendering
+    plt.clf()
+    
+    shap.summary_plot(shap_values, X_sample, plot_type="bar", show=False)
     fig2 = plt.gcf()
     st.pyplot(fig2)
+    
+    # Clear after render
+    plt.clf()
 
 
 elif selected == "💡 Predict Premium":
@@ -210,7 +225,7 @@ elif selected == "💡 Predict Premium":
             # 🔍 SHAP Explanation
             st.subheader("📌 SHAP Explanation")
 
-            shap_values = shap.TreeExplainer(model)(input_df)
+            shap_values = explainer.shap_values(input_df)
             base_value = shap_values.base_values[0]
             predicted_value = shap_values[0].values.sum() + base_value
 
@@ -220,16 +235,16 @@ elif selected == "💡 Predict Premium":
             """, unsafe_allow_html=True)
 
             fig, ax = plt.subplots()
-            shap.plots.waterfall(shap_values[0], show=False)
-
-            # Remove stray y-axis labels like "= xxx"
+            shap.plots.waterfall(shap.Explanation(values=shap_values[0], base_values=explainer.expected_value, data=input_df.iloc[0]), show=False)
+            
+            # Remove stray labels like "= xxx"
             for txt in fig.axes[0].texts:
                 if "=" in txt.get_text():
                     txt.set_visible(False)
-
+            
             plt.tight_layout()
             st.pyplot(fig)
-
+            plt.clf()  # Important cleanup
             st.caption("🔎 The SHAP plot shows how each input feature nudges the premium away from the average.")
 
         else:
