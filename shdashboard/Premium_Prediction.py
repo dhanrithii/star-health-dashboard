@@ -6,6 +6,10 @@ import shap
 import matplotlib.pyplot as plt
 import seaborn as sns
 from streamlit_option_menu import option_menu
+import os
+
+os.environ["TRANSFORMERS_NO_TF"] = "1"
+
 
 # Load data and encoders
 @st.cache_data
