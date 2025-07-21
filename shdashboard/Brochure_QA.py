@@ -51,7 +51,7 @@ def chunk_text(text, max_words=100):
 
 # --- GenAI Setup ---
 if api_key:
-    genai.configure(api_key=GEMINIKEY)
+    genai.configure(api_key=api_key)
     gen_model = genai.GenerativeModel("models/gemini-1.5-flash")
 else:
     gen_model = None
