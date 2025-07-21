@@ -74,7 +74,7 @@ if selected == "🏠 Home":
     with col2:
         st.markdown("""<div class='card'>
             <h4>📚 RAG Q&A</h4>
-            <p>Upload any brochure PDF and ask questions about its contents. Uses embedding similarity + Gemini Pro for answers.</p>
+            <p>Upload any brochure PDF and ask questions about its contents. Uses embedding similarity + Gemini 1.5 Flash for answers.</p>
         </div>""", unsafe_allow_html=True)
 
         st.markdown("""<div class='card'>
