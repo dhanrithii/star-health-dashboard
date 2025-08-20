@@ -1,4 +1,4 @@
-# 🏥 Star Health Insurance Analytics Dashboard
+# 🏥 Health Insurance Analytics Dashboard
 
 A centralized Streamlit-based dashboard developed during my internship at a health insurance company.  
 This dashboard includes **Product Analysis**, **Premium Prediction**, **Brochure Q&A (RAG)**, and **Fraud Detection** modules using machine learning and graph-based techniques.
